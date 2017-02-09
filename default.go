@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"git.vodjk.com/golang/common/modules/setting"
+	"github.com/go-baa/setting"
 )
 
 // _defaultLogger 日志接口
