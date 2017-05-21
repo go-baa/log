@@ -35,6 +35,7 @@ func New(out io.Writer, prefix string, flag int) Logger {
 	l.logger = log.New(out, prefix, flag)
 	l.level = LOG_DEBUG
 	l.callerLevel = 2
+
 	// buffer flush
 	l.buf = make(chan string, 128)
 	l.close = make(chan struct{})
@@ -44,6 +45,7 @@ func New(out io.Writer, prefix string, flag int) Logger {
 		}
 		l.close <- struct{}{}
 	}(l)
+
 	return l
 }
 
@@ -76,15 +78,15 @@ func (t *tLogger) Flush() {
 }
 
 func (t *tLogger) Print(v ...interface{}) {
-	t.logger.Print(v...)
+	t.output(LOG_INFO, "", false, v...)
 }
 
 func (t *tLogger) Printf(format string, v ...interface{}) {
-	t.logger.Printf(format, v...)
+	t.output(LOG_INFO, format, false, v...)
 }
 
 func (t *tLogger) Println(v ...interface{}) {
-	t.logger.Println(v...)
+	t.output(LOG_INFO, "", true, v...)
 }
 
 func (t *tLogger) Fatal(v ...interface{}) {
@@ -175,23 +177,37 @@ func (t *tLogger) output(level LogLevel, format string, newline bool, v ...inter
 	if t.level < level {
 		return
 	}
+
 	// 记录调用者位置
 	_, file, line, ok := runtime.Caller(t.callerLevel)
 	if !ok {
 		file = "???"
 		line = 0
 	}
-	pos := strings.LastIndex(file, "/") + 1
-	file = string(file[pos:])
+
+	// short file
+	// pos := strings.LastIndex(file, "/") + 1
+	// file = string(file[pos:])
+
 	s := fmt.Sprintf("%s:%d [%s] ", file, line, t.LevelName(level))
+
+	var formatText string
 	if format == "" {
-		s += fmt.Sprint(v...)
+		var buf []string
+		for i := range v {
+			buf = append(buf, fmt.Sprintf("%v", v[i]))
+		}
+		formatText = strings.Join(buf, " ")
 	} else {
-		s += fmt.Sprintf(format, v...)
+		formatText = fmt.Sprintf(format, v...)
 	}
+
+	s += formatText
+
 	if newline {
 		s += "\n"
 	}
+
 	// PANIC, FATAL immediately output
 	if level <= LOG_PANIC {
 		t.logger.Print(s)
