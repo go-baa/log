@@ -10,6 +10,16 @@ import (
 	"sync"
 )
 
+const (
+	Ldate         = log.Ldate         // the date in the local time zone: 2009/01/23
+	Ltime         = log.Ltime         // the time in the local time zone: 01:23:23
+	Lmicroseconds = log.Lmicroseconds // microsecond resolution: 01:23:23.123123.  assumes Ltime.
+	Llongfile     = log.Llongfile     // full file name and line number: /a/b/c/d.go:23
+	Lshortfile    = log.Lshortfile    // final file name element and line number: d.go:23. overrides Llongfile
+	LUTC          = log.LUTC          // if Ldate or Ltime is set, use UTC rather than the local time zone
+	LstdFlags     = log.LstdFlags     // initial values for the standard logger
+)
+
 type tLogger struct {
 	logger      *log.Logger
 	level       LogLevel
