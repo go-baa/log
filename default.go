@@ -111,6 +111,12 @@ func Debugln(v ...interface{}) {
 	_defaultLogger.Debugln(v...)
 }
 
+func Output(calldepth int, s string) error {
+	_defaultLogger.(*tLogger).SetCallerLevel(calldepth)
+	_defaultLogger.Println(s)
+	return nil
+}
+
 func init() {
 	var f *os.File
 	file := setting.Config.MustString("log.file", "")

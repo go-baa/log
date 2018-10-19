@@ -51,4 +51,5 @@ type Logger interface {
 	Debug(v ...interface{})
 	Debugf(format string, v ...interface{})
 	Debugln(v ...interface{})
+	Output(calldepth int, s string) error
 }

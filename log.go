@@ -170,6 +170,12 @@ func (t *tLogger) Debugln(v ...interface{}) {
 	t.output(LOG_DEBUG, "", true, v...)
 }
 
+func (t *tLogger) Output(calldepth int, s string) error {
+	t.SetCallerLevel(calldepth)
+	t.Println(s)
+	return nil
+}
+
 func (t *tLogger) output(level LogLevel, format string, newline bool, v ...interface{}) {
 	if t.level == LOG_OFF {
 		return
