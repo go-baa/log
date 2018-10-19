@@ -49,6 +49,11 @@ func New(out io.Writer, prefix string, flag int) Logger {
 	return l
 }
 
+// Flags returns the standard flags.
+func Flags() int {
+	return LstdFlags
+}
+
 func (t *tLogger) Level() LogLevel {
 	t.mu.Lock()
 	defer t.mu.Unlock()
