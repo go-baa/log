@@ -24,6 +24,7 @@ type tLogger struct {
 	logger      *log.Logger
 	level       LogLevel
 	callerLevel int
+	flag        int
 	buf         chan string
 	close       chan struct{}
 	mu          sync.Mutex
@@ -32,9 +33,10 @@ type tLogger struct {
 // New 创建一个新的日志记录器
 func New(out io.Writer, prefix string, flag int) Logger {
 	l := new(tLogger)
-	l.logger = log.New(out, prefix, flag)
+	l.logger = log.New(out, prefix, LstdFlags)
 	l.level = LOG_DEBUG
 	l.callerLevel = 2
+	l.flag = flag
 
 	// buffer flush
 	l.buf = make(chan string, 128)
@@ -190,17 +192,21 @@ func (t *tLogger) output(level LogLevel, format string, newline bool, v ...inter
 	}
 
 	// 记录调用者位置
+	var s string
 	_, file, line, ok := runtime.Caller(t.callerLevel)
 	if !ok {
 		file = "???"
 		line = 0
 	}
-
-	// short file
-	// pos := strings.LastIndex(file, "/") + 1
-	// file = string(file[pos:])
-
-	s := fmt.Sprintf("%s:%d [%s] ", file, line, t.LevelName(level))
+	if t.flag&(Lshortfile|Llongfile) != 0 {
+		if t.flag&Lshortfile != 0 {
+			pos := strings.LastIndex(file, "/") + 1
+			file = string(file[pos:])
+		}
+		s = fmt.Sprintf("%s:%d [%s] ", file, line, t.LevelName(level))
+	} else {
+		s = fmt.Sprintf("[%s] ", t.LevelName(level))
+	}
 
 	var formatText string
 	if format == "" {
