@@ -6,7 +6,8 @@ type LogLevel int
 const (
 	// !nashtsai! following level also match syslog.Priority value
 	LOG_UNKNOWN LogLevel = iota - 2 // -2
-	LOG_OFF     LogLevel = iota - 1 // 0
+	LOG_OFF     LogLevel = iota - 1 // -1
+	LOG_PRINT                       // 0
 	LOG_FATAL                       // 1
 	LOG_PANIC                       // 2
 	LOG_ERROR   LogLevel = iota + 1 // 5
@@ -17,6 +18,7 @@ const (
 
 var levelNames = map[LogLevel]string{
 	LOG_UNKNOWN: "UNKNOWN",
+	LOG_PRINT:   "PRINT",
 	LOG_FATAL:   "FATAL",
 	LOG_PANIC:   "PANIC",
 	LOG_ERROR:   "ERROR",

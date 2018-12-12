@@ -85,15 +85,15 @@ func (t *tLogger) Flush() {
 }
 
 func (t *tLogger) Print(v ...interface{}) {
-	t.output(LOG_INFO, "", false, v...)
+	t.output(LOG_PRINT, "", false, v...)
 }
 
 func (t *tLogger) Printf(format string, v ...interface{}) {
-	t.output(LOG_INFO, format, false, v...)
+	t.output(LOG_PRINT, format, false, v...)
 }
 
 func (t *tLogger) Println(v ...interface{}) {
-	t.output(LOG_INFO, "", true, v...)
+	t.output(LOG_PRINT, "", true, v...)
 }
 
 func (t *tLogger) Fatal(v ...interface{}) {
