@@ -203,9 +203,13 @@ func (t *tLogger) output(level LogLevel, format string, newline bool, v ...inter
 			pos := strings.LastIndex(file, "/") + 1
 			file = string(file[pos:])
 		}
-		s = fmt.Sprintf("%s:%d [%s] ", file, line, t.LevelName(level))
-	} else {
-		s = fmt.Sprintf("[%s] ", t.LevelName(level))
+		s = fmt.Sprintf("%s:%d ", file, line)
+	}
+
+	// log level
+	// don't output `print` level name
+	if level != LOG_PRINT {
+		s += fmt.Sprintf("[%s] ", t.LevelName(level))
 	}
 
 	var formatText string
