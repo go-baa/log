@@ -33,10 +33,10 @@ type tLogger struct {
 // New 创建一个新的日志记录器
 func New(out io.Writer, prefix string, flag int) Logger {
 	l := new(tLogger)
-	l.logger = log.New(out, prefix, LstdFlags)
+	l.logger = log.New(out, prefix, flag)
 	l.level = LOG_DEBUG
-	l.callerLevel = 2
 	l.flag = flag
+	l.callerLevel = 2
 
 	// buffer flush
 	l.buf = make(chan string, 128)
