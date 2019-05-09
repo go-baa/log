@@ -12,8 +12,8 @@ const (
 	LOG_PANIC                       // 2
 	LOG_ERROR   LogLevel = iota + 1 // 5
 	LOG_WARN                        // 6
-	LOG_INFO    LogLevel = iota + 4 // 10
-	LOG_DEBUG                       // 11
+	LOG_INFO    LogLevel = iota + 4 // 11
+	LOG_DEBUG                       // 12
 )
 
 var levelNames = map[LogLevel]string{
