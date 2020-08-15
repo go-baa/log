@@ -26,6 +26,8 @@ type tLogger struct {
 	callerLevel int
 	flag        int
 	buf         chan string
+	copy        chan string
+	copyEnabled bool
 	close       chan struct{}
 	mu          sync.Mutex
 }
@@ -66,6 +68,17 @@ func (t *tLogger) SetLevel(level LogLevel) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	t.level = level
+}
+
+func (t *tLogger) SetCopy(ch chan string) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	t.copy = ch
+	if ch == nil {
+		t.copyEnabled = false
+	} else {
+		t.copyEnabled = true
+	}
 }
 
 func (t *tLogger) LevelName(level LogLevel) string {
@@ -235,5 +248,12 @@ func (t *tLogger) output(level LogLevel, format string, newline bool, v ...inter
 	} else {
 		// in buffer
 		t.buf <- s
+	}
+
+	// copy log stream
+	if t.copyEnabled {
+		go func() {
+			t.copy <- s
+		}()
 	}
 }

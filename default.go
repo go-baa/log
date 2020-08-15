@@ -23,6 +23,10 @@ func SetLevel(l LogLevel) {
 	_defaultLogger.SetLevel(l)
 }
 
+func SetCopy(ch chan string) {
+	_defaultLogger.SetCopy(ch)
+}
+
 func Flush() {
 	_defaultLogger.Flush()
 }

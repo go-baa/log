@@ -31,6 +31,7 @@ var levelNames = map[LogLevel]string{
 type Logger interface {
 	Level() LogLevel
 	SetLevel(l LogLevel)
+	SetCopy(ch chan string)
 	Flush()
 	Print(v ...interface{})
 	Printf(format string, v ...interface{})
